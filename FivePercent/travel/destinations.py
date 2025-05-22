@@ -1,16 +1,15 @@
-from flask import Blueprint, render_template, request , redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for
 from .models import Destination, Comment
-from .forms import DestinationForm
+from .forms import DestinationForm, CommentForm
 
-# Use of blueprint to group routes, 
-# name - first argument is the blue print name 
-# import name - second argument - helps identify the root url for it 
 destbp = Blueprint('destination', __name__, url_prefix='/destinations')
 
 @destbp.route('/<id>')
 def show(id):
     destination = get_destination()
-    return render_template('destinations/show.html', destination=destination)
+    # create the comment form
+    cform = CommentForm()    
+    return render_template('destinations/show.html', destination=destination, form=cform)
 
 @destbp.route('/create', methods = ['GET', 'POST'])
 def create():
@@ -20,6 +19,15 @@ def create():
     print('Successfully created new travel destination')
     return redirect(url_for('destination.create'))
   return render_template('destinations/create.html', form=form)
+
+@destbp.route('/<id>/comment', methods = ['GET', 'POST'])
+def comment(id):
+  # here the form is created  form = CommentForm()
+  form = CommentForm()
+  if form.validate_on_submit():	#this is true only in case of POST method
+    print(f"The following comment has been posted: {form.text.data}")
+  # notice the signature of url_for
+  return redirect(url_for('destination.show', id=1))
 
 def get_destination():
   # creating the description of Brazil
