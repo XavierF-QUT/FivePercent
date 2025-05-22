@@ -1,7 +1,21 @@
-from flask import Blueprint, render_template
+from flask import Flask
+from flask_bootstrap import Bootstrap5
 
-mainbp = Blueprint('main', __name__)
+def create_app():
+    app = Flask(__name__)
 
-@mainbp.route('/')
-def index():
-    return render_template('index.html')
+    # we use this utility module to display forms quickly
+    Bootstrap5(app)
+
+    # A secret key for the session object
+    app.secret_key = 'somerandomvalue'
+    
+    # add Blueprints
+    from . import views
+    app.register_blueprint(views.mainbp)
+    from . import destinations
+    app.register_blueprint(destinations.destbp)
+    from . import auth
+    app.register_blueprint(auth.authbp)
+
+    return app
