@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request #, redirect, url_for
+from flask import Blueprint, render_template, request , redirect, url_for
 from .models import Destination, Comment
 from .forms import DestinationForm
 
@@ -18,7 +18,7 @@ def create():
   form = DestinationForm()
   if form.validate_on_submit():
     print('Successfully created new travel destination')
-    # return redirect(url_for('destination.create'))
+    return redirect(url_for('destination.create'))
   return render_template('destinations/create.html', form=form)
 
 def get_destination():
